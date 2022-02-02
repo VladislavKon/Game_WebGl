@@ -9,26 +9,19 @@ const unityContext = new UnityContext({
 });
 
 function Map() {
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [score, setScore] = useState(0);
-
   function spawnEnemies() {
     unityContext.send("GameController", "SpawnEnemies", 100);
   }
 
   useEffect(function () {
-    unityContext.on("GameOver", function (userName, score) {
-      setIsGameOver(true);
-      setUserName(userName);
-      setScore(score);
+    unityContext.on("SaveGame", function (map) {
+      console.log(map)
     });
   }, []);
 
   return (
     <div>
-      <button onClick={spawnEnemies}>Spawn a bunch!</button>
-      {isGameOver === true && <p>{`Game Over! ${userName} ${score} points`}</p>}
+      <button onClick={spawnEnemies}>Spawn a bunch!</button>      
       <Unity style={{ width: '1280px', height: '720px'}} unityContext={unityContext} />
     </div>
   );
