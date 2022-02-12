@@ -10,9 +10,11 @@ import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { userOkFetch } from "./auth/authSlice";
 import Quiz from "./quiz/Quiz";
 import Lobby from "./components/lobby/Lobby";
+import Lobby from "./lobby/Lobby";
 import Home from "./components/Home";
 import Navigation from "./components/Navigation";
 import Help from "./components/Help";
+import Map from "./components/Map";
 
 const App = () => {
     const history = createBrowserHistory();
@@ -31,6 +33,7 @@ const App = () => {
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
             <Route path='/lobby' component={Lobby} />
+            <Route path='/map' component={Map} />
             <PrivateRoute path='/quiz' component={Quiz} />
             <PrivateRoute path='/game' component={Temp} />
             <PrivateRoute path='/game2' component={Temp2} />
