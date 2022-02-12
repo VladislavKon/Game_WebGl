@@ -1,4 +1,4 @@
-import { AppBar, Divider, Drawer, IconButton, List, ListItem, ListItemText, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { AppBar, bottomNavigationActionClasses, Divider, Drawer, IconButton, List, ListItem, ListItemText, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -30,7 +30,9 @@ export default function Navigation() {
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1,
+                    marginBottom: '10px'
+                }}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton

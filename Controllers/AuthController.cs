@@ -1,59 +1,62 @@
 ﻿using Gamification.Data;
-using Gamification.DTOs;
+using Gamification.Models.DTO;
 using Gamification.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Gamification.Controllers
 {
-    [Route(template: "api")]
+    [Route(template: "api/auth")]
     [ApiController]
     [Authorize]
     public class AuthController : ControllerBase
     {
-       private readonly IUserRepository _repository;
-       public AuthController(IUserRepository repository)
+       private readonly IUserRepository _userRepository;
+       public AuthController(IUserRepository userRepository)
         {
-            _repository = repository;
-        }
-        [AllowAnonymous]
-        [HttpPost(template: "register")]
-        public IActionResult Register(RegisterDto dto)
-        {
-            var user = new User
-            {
-                UserName = dto.UserName,
-                Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            };
-            return Created(uri: "success", value: _repository.Create(user));
+            _userRepository = userRepository;
         }
 
         [AllowAnonymous]
-        [HttpPost(template: "login")]
-        public async Task<IActionResult> Login(LoginDto dto)
+        [HttpPost(template: "register")]
+        public async Task<IActionResult> Register(UserRegisterDto userDto)
         {
-            var user = _repository.GetUserByUserName(dto.UserName);
+            if(userDto == null)
+            {
+                return BadRequest();
+            }
+            var user = new User
+            {
+                UserName = userDto.UserName,
+                Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password)
+            };
+            return Created("success", await _userRepository.Create(user));
+        }
+        [AllowAnonymous]
+        [HttpPost(template: "login")]
+        public async Task<IActionResult> Login(UserRegisterDto userDto)
+        {
+            var user = _userRepository.GetUserByUserName(userDto.UserName);
             // если нет такого пользователя в базе
             if (user == null)
             {
                 return Unauthorized(new { message = "Invalid Credentials" });
             }
             // если пароль не прошел верификацию 
-            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.Password))
             {
                 return Unauthorized(new { message = "Invalid Credentials" });
             }
 
-            await AuthenticateAsync(dto.UserName);
+            await AuthenticateAsync(userDto.UserName);
 
-            return Ok(new { message = "success", username = dto.UserName });
+            return Ok(new { message = "success", username = userDto.UserName });
         }
         
         [HttpPost(template: "logout")]
@@ -62,7 +65,6 @@ namespace Gamification.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-        // возможно нужно будет подшаманить
         [AllowAnonymous]
         [HttpGet(template: "user")]
         public IActionResult GetUser()

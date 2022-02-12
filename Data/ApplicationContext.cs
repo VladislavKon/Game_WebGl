@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Gamification.Models
 {
-    public class UserContext : DbContext
+    public class ApplicationContext : DbContext
     {
-        public UserContext(DbContextOptions<UserContext> options) : base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         public DbSet<User> Users { get; set; }
-        
+        public DbSet<Team> Teams { get; set; } 
     }
 }

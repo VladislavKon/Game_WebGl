@@ -30,6 +30,7 @@ export default function SignIn() {
   }
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     
@@ -42,7 +43,7 @@ export default function SignIn() {
       Password: data.get('password'),
     };
 
-    const response = await fetch('api/login', {
+    const response = await fetch('api/auth/login', {
       method: 'POST',
       body: JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' }

@@ -50,7 +50,7 @@ export default function SignUp() {
       Password: data.get('password'),
     };
 
-    const response = await fetch('api/register', {
+    const response = await fetch('api/auth/register', {
       method: 'POST',
       body: JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' }

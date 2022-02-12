@@ -1,6 +1,5 @@
 ﻿using Gamification.Models;
-using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,15 +7,16 @@ namespace Gamification.Data
 {
     public class UserRepository : IUserRepository
     {
-        private readonly UserContext db;
-        public UserRepository(UserContext context)
+        private readonly ApplicationContext db;
+        public UserRepository(ApplicationContext context)
         {
            db = context;
         }
-        public User Create (User user)
+
+        public async Task<User> Create (User user)
         {
             db.Users.Add(user);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return user;
         }
 
